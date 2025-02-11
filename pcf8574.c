@@ -8,9 +8,14 @@
 
 /**
  * PCF8574 is designed to sink current rather than source it.
+ *
+ * It uses "Quasi-bidirectional I/Os". See the data sheet for
+ * more information.
  * 
- * this means LEDs should be tied to Vcc via a resistor, and 
+ * This means LEDs should be tied to Vcc via a resistor, and 
  * then to ground via the 8574's port.
+ * 
+ * There is also no direction register to be set.
  * 
  * This means you write a 1 (HIGH) to turn the LED off and why
  * we send "~bits" below.
@@ -39,25 +44,6 @@ int i2c_open(int bus, int address)
     return file;
 }
 
-int i2c_write(int file, uint8_t* data, int len)
-{
-    if (write(file, data, len) != len) {
-        perror("Error writing");
-        return -1;
-    }
-    return len;
-}
-
-int i2c_read(int file, uint8_t* buffer, int len)
-{
-    if (read(file, buffer, len) != len) {
-        perror("Error readiing");
-        return -1;
-    }
-    return len;
-}
-
-
 int main(int argc, char **argv)
 {
     int bus = 0;
@@ -70,7 +56,13 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    uint8_t data[1];
+    uint8_t data[1] = { 0x00 };
+    // Check the first write to make sure the device is really there.
+    if (write(i2c, data, 1) != 1) {
+        perror("I2C Write to device");
+        goto cleanup; // Goto? I've been looking at too much linux kernel drivers.
+    }
+
     uint8_t bits;
 
     // Fast cylon effect.
@@ -97,6 +89,7 @@ int main(int argc, char **argv)
 
     write(i2c, data, 1);
 
+cleanup:
     close(i2c);
 
     return 0;
