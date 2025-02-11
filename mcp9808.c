@@ -91,15 +91,18 @@ int main(int argc, char **argv)
         goto cleanup;
     }
 
-    // Convert data from 13bits MSB first.
-    float temp = ((data[0] & 0x1f) << 8) + data[1];
+    // Convert data
+    //
 
-    if (temp > 4095) {
-        temp -= 8192;
+    uint16_t raw = (data[0] << 8) + data[1];
+
+    float temp = raw & 0x0FFF;
+
+    temp /= 16.0;
+
+    if (raw & 0x1000) {
+        temp -= 256;
     }
-
-    // Adjust to set resolution
-    temp *= 0.0625;
 
     printf("Temperature: %f\n", temp);
     
