@@ -1,51 +1,8 @@
 #include <unistd.h>
-#include <linux/i2c-dev.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdint.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
 
-int i2c_open(int bus, int address)
-{
-    int file;
-    char filename[20];
-
-    snprintf(filename, 19, "/dev/i2c-%d", bus);
-
-    file = open(filename, O_RDWR);
-    if (file < 0) {
-        perror("Error opening i2c bus");
-        return file;
-    }
-
-    if (ioctl(file, I2C_SLAVE, address) > 0) {
-        perror("Error selecting device");
-        close(file);
-        return -1;
-    }
-
-    return file;
-}
-
-int i2c_write(int file, uint8_t* data, int len)
-{
-    if (write(file, data, len) != len) {
-        perror("Error writing");
-        return -1;
-    }
-    return len;
-}
-
-int i2c_read(int file, uint8_t* buffer, int len)
-{
-    if (read(file, buffer, len) != len) {
-        perror("Error readiing");
-        return -1;
-    }
-    return len;
-}
-
+#include "i2c.h"
 
 int main(int argc, char **argv)
 {
@@ -67,7 +24,10 @@ int main(int argc, char **argv)
     data[1] = 0x00;
     data[2] = 0x00;
 
-    if (i2c_write(i2c, data, 3) < 0) {
+    // Check the result of the first write to make sure
+    // device is there.
+    if (write(i2c, data, 3) != 3) {
+        perror("Error writing to device");
         goto cleanup;
     }
 
@@ -76,18 +36,15 @@ int main(int argc, char **argv)
     data[0] = 0x08;
     data[1] = 0x03;
 
-    if (i2c_write(i2c, data, 2) < 0) {
-        goto cleanup;
-    }
+    write(i2c, data, 2);
 
     // Read from register 0x5
     data[0] = 0x05;
 
-    if (i2c_write(i2c, data, 1) < 0) {
-        goto cleanup;
-    }
+    write(i2c, data, 1);
 
-    if (i2c_read(i2c, data, 2) < 0) {
+    // Read could fail
+    if (read(i2c, data, 2) != 2) {
         goto cleanup;
     }
 

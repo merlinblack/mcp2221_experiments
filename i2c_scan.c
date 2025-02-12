@@ -1,40 +1,15 @@
 #include <unistd.h>
-#include <linux/i2c-dev.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdint.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
 
-int i2c_open(int bus)
-{
-    int file;
-    char filename[20];
+#include "i2c.h"
 
-    snprintf(filename, 19, "/dev/i2c-%d", bus);
-
-    file = open(filename, O_RDWR);
-    if (file < 0) {
-        perror("Error opening i2c bus");
-    }
-
-    return file;
-}
-
-int i2c_select(int file, int address)
-{
-    if (ioctl(file, I2C_SLAVE, address) > 0) {
-        return -1;
-    }
-
-    return 0;
-}
 
 int main(int argc, char **argv)
 {
     int bus = 0;
 
-    int i2c = i2c_open( bus );
+    int i2c = i2c_open( bus, -1 );
 
     if (i2c<0) {
         return 0;

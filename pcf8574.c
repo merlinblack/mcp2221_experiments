@@ -1,10 +1,8 @@
 #include <unistd.h>
-#include <linux/i2c-dev.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdint.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
+
+#include "i2c.h"
 
 /**
  * PCF8574 is designed to sink current rather than source it.
@@ -22,27 +20,6 @@
  * 
  * 
 */
-int i2c_open(int bus, int address)
-{
-    int file;
-    char filename[20];
-
-    snprintf(filename, 19, "/dev/i2c-%d", bus);
-
-    file = open(filename, O_RDWR);
-    if (file < 0) {
-        perror("Error opening i2c bus");
-        return file;
-    }
-
-    if (ioctl(file, I2C_SLAVE, address) > 0) {
-        perror("Error selecting device");
-        close(file);
-        return -1;
-    }
-
-    return file;
-}
 
 int main(int argc, char **argv)
 {
@@ -60,7 +37,7 @@ int main(int argc, char **argv)
     // Check the first write to make sure the device is really there.
     if (write(i2c, data, 1) != 1) {
         perror("I2C Write to device");
-        goto cleanup; // Goto? I've been looking at too much linux kernel drivers.
+        goto cleanup; // Goto? I've been looking at too much linux kernel drivers. :-D
     }
 
     uint8_t bits;
