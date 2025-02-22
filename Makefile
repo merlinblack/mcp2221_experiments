@@ -1,4 +1,5 @@
-EXEC=i2c_scan pcf8574 mcp9808
+EXEC=i2c_scan pcf8574 mcp9808 ags10_simple
+LIB=i2c.o getbus.o
 CC=gcc
 
 .PHONY:
@@ -6,14 +7,17 @@ all: $(EXEC)
 
 .PHONY:
 clean:
-	rm $(EXEC) i2c.o
+	rm $(EXEC) $(LIB)
 
-i2c_scan: i2c_scan.c i2c.o
+i2c_scan: i2c_scan.c $(LIB)
 	gcc -o $@ $^
 
-pcf8574: pcf8574.c i2c.o
+pcf8574: pcf8574.c $(LIB)
 	gcc -o $@ $^
 
-mcp9808: mcp9808.c i2c.o
+mcp9808: mcp9808.c $(LIB)
+	gcc -o $@ $^
+
+ags10_simple: ags10_simple.c $(LIB)
 	gcc -o $@ $^
 

@@ -3,11 +3,11 @@
 #include <stdint.h>
 
 #include "i2c.h"
-
+#include "getbus.h"
 
 int main(int argc, char **argv)
 {
-    int bus = 0;
+    int bus = get_bus(argc, argv);
 
     int i2c = i2c_open( bus, -1 );
 

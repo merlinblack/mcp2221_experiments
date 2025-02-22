@@ -3,12 +3,14 @@
 #include <stdint.h>
 
 #include "i2c.h"
+#include "getbus.h"
+
+int get_bus(int argc, char **argv);
 
 int main(int argc, char **argv)
 {
-    int bus = 0;
-    // MCP9808 address
-    int address = 0x18;
+    int bus = get_bus(argc, argv);
+    int address = 0x18; // MCP9808 address
 
     int i2c = i2c_open( bus, address );
 
