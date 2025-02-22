@@ -3,7 +3,7 @@
 
 /**
  * Get file handle to i2c bus.
- * Pass negative for address to skip serting address.
+ * Pass negative for address to skip setting address.
 */
 
 int i2c_open(int bus, int address);

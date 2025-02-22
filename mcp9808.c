@@ -5,8 +5,6 @@
 #include "i2c.h"
 #include "getbus.h"
 
-int get_bus(int argc, char **argv);
-
 int main(int argc, char **argv)
 {
     int bus = get_bus(argc, argv);
