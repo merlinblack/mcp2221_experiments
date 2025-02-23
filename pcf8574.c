@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "i2c.h"
+#include "getbus.h"
 
 /**
  * PCF8574 is designed to sink current rather than source it.
@@ -23,9 +24,8 @@
 
 int main(int argc, char **argv)
 {
-    int bus = 0;
-    // PCF8574 address 0x20-0x27
-    int address = 0x27;
+    int bus = get_bus(argc, argv);
+    int address = 0x27; // PCF8574 address 0x20-0x27
 
     int i2c = i2c_open( bus, address );
 
