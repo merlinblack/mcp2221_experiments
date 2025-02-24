@@ -1,14 +1,14 @@
 EXEC=i2c_scan pcf8574 mcp9808 ags10_simple
 LIB=i2c.o getbus.o
 CC=gcc
-CFLAGS=-Wall -Wextra -Wpedantic
+CFLAGS=-O3 -Wall -Wextra -Wpedantic
 
 .PHONY:
 all: $(EXEC)
 
 .PHONY:
 clean:
-	rm $(EXEC) $(LIB)
+	rm -f $(EXEC) $(LIB)
 
 i2c_scan: i2c_scan.c $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^

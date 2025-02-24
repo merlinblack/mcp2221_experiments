@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     // Convert data
     //
 
-    uint16_t raw = (data[0] << 8) + data[1];
+    uint16_t raw = ((uint16_t)data[0] << 8) + data[1];
 
     float temp = raw & 0x0FFF;
 
