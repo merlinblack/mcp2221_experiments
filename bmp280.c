@@ -6,24 +6,15 @@
 #include "i2c.h"
 #include "getbus.h"
 
+//#define IODEBUG
+
 BMP2_INTF_RET_TYPE bmp2_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t length, void *intf_ptr);
 BMP2_INTF_RET_TYPE bmp2_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t length, void *intf_ptr);
 void bmp2_delay_us(uint32_t period, void *intf_ptr);
 
 char *get_bmp2_error(int8_t code);
-
-#define NOISY 0
-
-void vlog(char *fmt, ...)
-{
-    va_list args;
-
-    if (NOISY) {
-        va_start(args, fmt);
-        vfprintf(stderr, fmt, args);
-        va_end(args);
-    }
-}
+void iolog(char *fmt, ...);
+void elog(char *fmt, ...);
 
 int main(int argc, char **argv)
 {
@@ -45,17 +36,17 @@ int main(int argc, char **argv)
     device.write = bmp2_write;
     device.delay_us = bmp2_delay_us;
 
-    vlog("bmp2_init()\n");
+    iolog("bmp2_init()\n");
     if (BMP2_OK != (ret = bmp2_init(&device))) {
-        vlog("Whoops! %s\n", get_bmp2_error(ret));
+        elog("Whoops! %s\n", get_bmp2_error(ret));
         goto cleanup;
     }
 
     struct bmp2_config config;
 
-    vlog("bmp2_get_config()\n");
+    iolog("bmp2_get_config()\n");
     if (BMP2_OK != (ret = bmp2_get_config(&config, &device))) {
-        vlog("Whoops! %s\n", get_bmp2_error(ret));
+        elog("Whoops! %s\n", get_bmp2_error(ret));
         goto cleanup;
     }
 
@@ -63,17 +54,17 @@ int main(int argc, char **argv)
     config.odr = BMP2_ODR_125_MS;
     config.filter = BMP2_FILTER_OFF;
 
-    vlog("bmp2_set_power_mode()\n");
+    iolog("bmp2_set_power_mode()\n");
     if (BMP2_OK != (ret = bmp2_set_power_mode(BMP2_POWERMODE_FORCED, &config, &device))) {
-        vlog("Whoops! %s\n", get_bmp2_error(ret));
+        elog("Whoops! %s\n", get_bmp2_error(ret));
         goto cleanup;
     }
 
     uint32_t measurement_time;
 
-    vlog("bmp2_compute_meas_time()\n");
+    iolog("bmp2_compute_meas_time()\n");
     if (BMP2_OK != (ret = bmp2_compute_meas_time(&measurement_time, &config, &device))) {
-        vlog("Whoops! %s\n", get_bmp2_error(ret));
+        elog("Whoops! %s\n", get_bmp2_error(ret));
         goto cleanup;
     }
 
@@ -83,9 +74,9 @@ int main(int argc, char **argv)
     while (tries--) {
         struct bmp2_status status;
 
-        vlog("bmp2_get_status()\n");
+        iolog("bmp2_get_status()\n");
         if (BMP2_OK != (ret = bmp2_get_status(&status, &device))) {
-            vlog("Whoops! %s\n", get_bmp2_error(ret));
+            elog("Whoops! %s\n", get_bmp2_error(ret));
             goto cleanup;
         }
 
@@ -95,18 +86,18 @@ int main(int argc, char **argv)
             continue;
         }
 
-        vlog("bmp2_get_sensor_data()\n");
+        iolog("bmp2_get_sensor_data()\n");
         if (BMP2_OK != (ret = bmp2_get_sensor_data(&data, &device))) {
-            vlog("Whoops! %s\n", get_bmp2_error(ret));
+            elog("Whoops! %s\n", get_bmp2_error(ret));
             goto cleanup;
         }
 
         break;
     }
 
-    vlog("bmp2_set_power_mode(SLEEP)\n");
+    iolog("bmp2_set_power_mode(SLEEP)\n");
     if (BMP2_OK != (ret = bmp2_set_power_mode(BMP2_POWERMODE_SLEEP, &config, &device))) {
-        vlog("Whoops! %s\n", get_bmp2_error(ret));
+        elog("Whoops! %s\n", get_bmp2_error(ret));
         goto cleanup;
     }
 
@@ -132,11 +123,13 @@ BMP2_INTF_RET_TYPE bmp2_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t lengt
         return !BMP2_INTF_RET_SUCCESS;
     }
 
-    vlog("  Data read starting at register %02X:\n  ", reg_addr);
+#ifdef IODEBUG
+    iolog("  Data read starting at register %02X:\n  ", reg_addr);
     for( uint32_t i = 0; i < length; i++) {
-        vlog("%02X ", reg_data[i]);
+        iolog("%02X ", reg_data[i]);
     }
-    vlog("\n");
+    iolog("\n");
+#endif
 
     return BMP2_INTF_RET_SUCCESS;
 }
@@ -159,11 +152,13 @@ BMP2_INTF_RET_TYPE bmp2_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_
         return !BMP2_INTF_RET_SUCCESS;
     }
 
-    vlog("  Data written:\n  %02X ", reg_addr);
+#ifdef IODEBUG
+    iolog("  Data written:\n  %02X ", reg_addr);
     for( uint32_t i = 0; i < length; i++) {
-        vlog("%02X ", reg_data[i]);
+        iolog("%02X ", reg_data[i]);
     }
-    vlog("\n");
+    iolog("\n");
+#endif
 
     return BMP2_INTF_RET_SUCCESS;
 }
@@ -193,4 +188,26 @@ char *get_bmp2_error(int8_t code)
         default:
             return "Don't panic (PANIC)";
     }
+}
+
+#ifdef IODEBUG
+void iolog(char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    vfprintf(stderr, fmt, args);
+    va_end(args);
+}
+#else
+void iolog( __attribute__((unused)) char *fmt, ...) {}
+#endif
+
+void elog(char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    vfprintf(stderr, fmt, args);
+    va_end(args);
 }
