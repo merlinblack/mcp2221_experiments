@@ -38,9 +38,15 @@ int main(int argc, char **argv)
 
     iolog("bmp2_init()\n");
     if (BMP2_OK != (ret = bmp2_init(&device))) {
-        elog("Whoops! %s\n", get_bmp2_error(ret));
-        goto cleanup;
+        address = BMP2_I2C_ADDR_SEC;
+        i2c_select(i2c, address);
+        if (BMP2_OK != (ret = bmp2_init(&device))) {
+            elog("Whoops! %s\n", get_bmp2_error(ret));
+            goto cleanup;
+        }
     }
+    
+    printf( "BMP280 found on address 0x%X\n", address);
 
     struct bmp2_config config;
 
@@ -114,12 +120,16 @@ cleanup:
 BMP2_INTF_RET_TYPE bmp2_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t length, void *intf_ptr)
 {
     if (write(*(int *)intf_ptr, &reg_addr, 1) != 1) {
+        #ifdef IODEBUG
         perror("Could not write register to device for read");
+        #endif
         return !BMP2_INTF_RET_SUCCESS;
     }
 
     if (read(*(int *)intf_ptr, reg_data, length) != length) {
+        #ifdef IODEBUG
         perror("Could not read from device");
+        #endif
         return !BMP2_INTF_RET_SUCCESS;
     }
 
@@ -148,7 +158,9 @@ BMP2_INTF_RET_TYPE bmp2_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_
     }
 
     if (write(*(int *)intf_ptr, buffer, length+1) != length+1) {
+        #ifdef IODEBUG
         perror("Could not write data to device");
+        #endif
         return !BMP2_INTF_RET_SUCCESS;
     }
 
