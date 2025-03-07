@@ -1,5 +1,5 @@
-EXEC=i2c_scan pcf8574 mcp9808 ags10_simple bmp280
-LIB=i2c.o getbus.o
+EXEC=i2c_scan pcf8574 mcp9808 ags10_simple bmp280 ssd1306
+LIB=i2c.o options.o getbus.o
 CC=gcc
 CFLAGS=-O3 -Wall -Wextra -Wpedantic
 
@@ -27,3 +27,6 @@ bmp2.o: bmp2-sensor-api/bmp2.c bmp2-sensor-api/bmp2.h bmp2-sensor-api/bmp2_defs.
 
 bmp280: bmp280.c bmp2.o $(LIB)
 	$(CC) $(CFLAGS) -Ibmp2-sensor-api -o $@ $^
+
+ssd1306: ssd1306.c $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^
