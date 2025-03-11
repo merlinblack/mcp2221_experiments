@@ -6,3 +6,5 @@ pcf8574
 mcp9808
 ags10_simple
 bmp280
+/ssd1306
+__pycache__
