@@ -1,0 +1,8 @@
+*.o
+oled
+oledinit
+oledinvert
+oleddim
+clock
+clockd
+

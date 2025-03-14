@@ -28,5 +28,5 @@ bmp2.o: bmp2-sensor-api/bmp2.c bmp2-sensor-api/bmp2.h bmp2-sensor-api/bmp2_defs.
 bmp280: bmp280.c bmp2.o $(LIB)
 	$(CC) $(CFLAGS) -Ibmp2-sensor-api -o $@ $^
 
-ssd1306: ssd1306.c $(LIB)
+ssd1306: ssd1306_test.c ssd1306.c $(LIB)
 	$(CC) -lm $(CFLAGS) -o $@ $^
