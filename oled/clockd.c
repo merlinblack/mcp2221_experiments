@@ -54,6 +54,11 @@ int main(int argc, char **argv)
 
     ssd1306_begin(i2c);
 
+    if (ssd1306_init()) {
+        perror("Could not intialise SSD1306");
+        return EXIT_FAILURE;
+    }
+
     inhibit[0] = 0;
     strncat(inhibit, getenv("HOME"), PATH_MAX-10);
     strncat(inhibit, "/noclock", 9);
@@ -71,9 +76,14 @@ int main(int argc, char **argv)
         timeinfo = localtime ( &rawtime );
 
         if (timeinfo->tm_hour > 1 && timeinfo->tm_hour < 7 ) {
+            // Nightnight.
             ssd1306_clear();
             ssd1306_show();
-            continue;
+            while (timeinfo->tm_hour < 7) {
+                sleep(60);
+                time(&rawtime);
+                timeinfo = localtime(&rawtime);
+            }
         }
 
         ssd1306_clear();

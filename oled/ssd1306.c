@@ -239,9 +239,14 @@ void ssd1306_write(char *string, uint8_t size)
         {
             _write_x = 0;
             _write_y += 8;
+            string++;
+            continue;
         }
         if (*string == '\r')
+        {
+            string++;
             continue;
+        }
 
         ssd1306_writechar(_write_x, _write_y, *string++, size);
         _write_x += 6 * size;

@@ -13,46 +13,69 @@
 
 void main(int argc, char **argv)
 {
-	Options *opt = getOptions(argc, argv);
+    Options *opt = getOptions(argc, argv);
 
-	int i2c = i2c_open(opt->bus, opt->address);
+    int i2c = i2c_open(opt->bus, opt->address);
 
-	if (i2c < 0)
-	{
-		return;
-	}
+    if (i2c < 0)
+    {
+        return;
+    }
 
-	ssd1306_begin(i2c);
+    ssd1306_begin(i2c);
 
-	if (argc > 0)
-	{
-		if (!strcmp(argv[optind], "nigelalara"))
-		{
-			ssd1306_clear();
-			ssd1306_full_blit(love);
-			ssd1306_show();
-			return;
-		}
-		if (!strcmp(argv[optind], "red5"))
-		{
-			ssd1306_clear();
-			ssd1306_full_blit(red5);
-			ssd1306_show();
-			return;
-		}
-	}
+    if (optind < argc)
+    {
+        if (!strcmp(argv[optind], "nigelalara"))
+        {
+            ssd1306_clear();
+            ssd1306_full_blit(love);
+            ssd1306_show();
+            return;
+        }
+        if (!strcmp(argv[optind], "red5"))
+        {
+            ssd1306_clear();
+            ssd1306_full_blit(red5);
+            ssd1306_show();
+            return;
+        }
+    }
 
-	ssd1306_clear();
+    ssd1306_clear();
 
-	char buffer[22];
-	uint8_t y = 0;
-	for (int i = optind; i <= LINES && i < argc; i++)
-	{
-		strncpy(buffer, argv[i], 21);
-		ssd1306_write_xy(0, y, buffer, opt->textSize);
-		y += opt->textSize * 8;
-		y += opt->lineSpacing;
-	}
+    char buffer[22];
+    uint8_t y = 0;
+    for (int i = optind; i <= LINES && i < argc; i++)
+    {
+        char *index = argv[i];
+        int c;
+        for (c = 0; c < 22 && *index != 0; c++)
+        {
+            // convert \n and \\, but ignore others
+            if (*index == '\\')
+            {
+                if (*(index + 1) == 'n')
+                {
+                    buffer[c] = '\n';
+                }
+                if (*(index + 1) == '\\')
+                {
+                    buffer[c] = '\\';
+                }
+                index++;
+            }
+            else
+            {
+                buffer[c] = *index;
+            }
+            index++;
+        }
+        buffer[c] = 0;
+        ssd1306_write_xy(0, y, buffer, opt->textSize);
+        y += opt->textSize * 8;
+        y += opt->lineSpacing;
+    }
 
-	ssd1306_show();
+    ssd1306_show();
 }
