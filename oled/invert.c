@@ -8,13 +8,12 @@
 #include "options.h"
 #include "ssd1306.h"
 
-void main(int argc, char **argv)
+void main(int argc, char** argv)
 {
-  Options *opt = getOptions(argc, argv);
+  Options* opt = getOptions(argc, argv);
 
   int i2c = i2c_open(opt->bus, opt->address);
-  if (i2c < 0)
-  {
+  if (i2c < 0) {
     return;
   }
 
@@ -23,27 +22,24 @@ void main(int argc, char **argv)
   if (argc > optind) {
     if (strcmp(argv[optind], "on") == 0) {
       ssd1306_invert(true);
-    }
-    else if (strcmp(argv[optind], "blink") == 0) {
+    } else if (strcmp(argv[optind], "blink") == 0) {
       int count = 1;
-      char *errptr;
-      
-      if (argc > optind+1) {
-        count = strtoul(argv[optind+1], &errptr, 0);
+      char* errptr;
+
+      if (argc > optind + 1) {
+        count = strtoul(argv[optind + 1], &errptr, 0);
       }
 
-      for( int i = 0; i<count; i++) {
+      for (int i = 0; i < count; i++) {
         ssd1306_invert(true);
         usleep(200000);
         ssd1306_invert(false);
         usleep(200000);
       }
-    }
-    else {
+    } else {
       ssd1306_invert(false);
     }
-  }
-  else {
+  } else {
     ssd1306_invert(false);
   }
 }

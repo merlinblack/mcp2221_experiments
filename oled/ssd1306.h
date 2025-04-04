@@ -20,10 +20,10 @@ bool ssd1306_flip(bool flip);
 bool ssd1306_dim(bool dimmed);
 void ssd1306_setpixel(uint8_t x, uint8_t y);
 void ssd1306_resetpixel(uint8_t x, uint8_t y);
-void ssd1306_full_blit(uint8_t *buffer);
+void ssd1306_full_blit(uint8_t* buffer);
 void ssd1306_filled_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h);
 void ssd1306_writechar(uint8_t x, uint8_t y, char c, uint8_t size);
-void ssd1306_write(char *string, uint8_t size);
-void ssd1306_write_xy(uint8_t x, uint8_t y, char *string, uint8_t size);
+void ssd1306_write(char* string, uint8_t size);
+void ssd1306_write_xy(uint8_t x, uint8_t y, char* string, uint8_t size);
 
-#endif // __SSD1306_H
+#endif  // __SSD1306_H

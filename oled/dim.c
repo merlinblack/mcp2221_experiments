@@ -8,26 +8,24 @@
 #include "options.h"
 #include "ssd1306.h"
 
-void main(int argc, char **argv)
+void main(int argc, char** argv)
 {
-  Options *opt = getOptions(argc, argv);
+  Options* opt = getOptions(argc, argv);
 
   int i2c = i2c_open(opt->bus, opt->address);
-  if (i2c<0) {
+  if (i2c < 0) {
     return;
   }
-  
+
   ssd1306_begin(i2c);
 
   if (argc > optind) {
     if (strcmp(argv[optind], "on") == 0) {
       ssd1306_dim(true);
-    }
-    else {
+    } else {
       ssd1306_dim(false);
     }
-  }
-  else {
+  } else {
     ssd1306_dim(false);
   }
 }

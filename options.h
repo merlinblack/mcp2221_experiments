@@ -3,17 +3,16 @@
 
 #include <stdbool.h>
 
-struct command_line_options
-{
-    bool initialised;
-    int bus;
-    bool verbose;
-    bool veryverbose;
-    bool csv;
+struct command_line_options {
+  bool initialised;
+  int bus;
+  bool verbose;
+  bool veryverbose;
+  bool csv;
 };
 
 extern struct command_line_options cli_opts;
 
-void get_options(int argc, char **argv);
+void get_options(int argc, char** argv);
 
-#endif // __OPTIONS_H
+#endif  // __OPTIONS_H
