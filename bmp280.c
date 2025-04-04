@@ -138,7 +138,7 @@ BMP2_INTF_RET_TYPE bmp2_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t lengt
         return !BMP2_INTF_RET_SUCCESS;
     }
 
-    if (read(*(int *)intf_ptr, reg_data, length) != length)
+    if (read(*(int *)intf_ptr, reg_data, length) != (ssize_t)length)
     {
         if (cli_opts.veryverbose)
         {
@@ -175,7 +175,7 @@ BMP2_INTF_RET_TYPE bmp2_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_
         buffer[i + 1] = reg_data[i];
     }
 
-    if (write(*(int *)intf_ptr, buffer, length + 1) != length + 1)
+    if (write(*(int *)intf_ptr, buffer, length + 1) != (ssize_t)length + 1)
     {
         if (cli_opts.veryverbose)
         {
