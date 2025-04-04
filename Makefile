@@ -31,10 +31,10 @@ ags10_simple: ags10_simple.c $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
 bmp2.o: bmp2-sensor-api/bmp2.c bmp2-sensor-api/bmp2.h bmp2-sensor-api/bmp2_defs.h
-	$(CC) $(CFLAGS) -c -Ibmp2-sensor-api bmp2-sensor-api/bmp2.c
+	$(CC) $(CFLAGS) -c -I bmp2-sensor-api bmp2-sensor-api/bmp2.c
 
 bmp280: bmp280.c bmp2.o $(LIB)
-	$(CC) $(CFLAGS) -Ibmp2-sensor-api -o $@ $^
+	$(CC) $(CFLAGS) -I bmp2-sensor-api -o $@ $^
 
 ssd1306: ssd1306_test.c ssd1306.c $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^ -lm

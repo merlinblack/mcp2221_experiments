@@ -15,8 +15,14 @@ bool write_eeprom_chunk(int i2c, uint16_t address, uint8_t* data, size_t size)
 
     uint8_t buffer[2 + 64]; // 2 bytes address + max chunk
 
-    // Most significant byte first
-    buffer[0] = address >> 8;
+    // Most significant byte first - AT24C32 datasheet.
+    // Intresting note:
+    // The '& 0xff' is not really required, a right shift on unsigned will fill
+    // the vaccant positions with bits equal to zero.
+    // However the compiler (I'm using gcc) generates slightly smaller code
+    // when you have it, taking advantage of the register 'al'
+    // being the high byte of 'ax', and not doing a shift at all.
+    buffer[0] = (address >> 8) & 0xff;
     buffer[1] = address & 0xff;
 
     memcpy(&buffer[2], data, size);
@@ -31,11 +37,11 @@ bool write_eeprom_chunk(int i2c, uint16_t address, uint8_t* data, size_t size)
 bool write_eeprom(int i2c, uint16_t address, uint8_t* data, size_t size)
 {
     size_t written = 0;
-    uint8_t alignment = 32;
-    uint8_t max_chunk_size = 32;
+    const uint8_t alignment = 32;
+    const uint8_t max_chunk_size = 32;
 
     // First aligned address after address
-    uint16_t aligned = (address / alignment + 1 ) * alignment;
+    uint16_t aligned = (address / alignment + 1) * alignment;
 
     if (write_eeprom_chunk( i2c, address, data, aligned - address )) {
         return true;
@@ -68,11 +74,14 @@ int main(int argc, char **argv)
         return 0;
     }
 
+    // This data is on my test eeprom - below test data should not smash it.
+    /*
     uint8_t address_and_data[8] = { 0, 0, 'A', 's', 'l', 'a', 'n', 0 };
     if (write(i2c, address_and_data, 8) != 8) {
         perror("EEPROM Write address and data");
         goto cleanup;
     }
+    */
 
     uint8_t data[0x1000];
     size_t size;
@@ -85,10 +94,10 @@ int main(int argc, char **argv)
 
     if (write_eeprom(i2c, /* address */ 6, data, size )) {
         perror("Error writing to eeprom."); 
+        goto cleanup;
     }
-    else {
-        printf( "Written: %zu (0x%zX) bytes.\n", size, size );
-    }
+
+    printf( "Written: %zu (0x%zX) bytes.\n", size, size );
 
 cleanup:
     close(i2c);
