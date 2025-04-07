@@ -132,20 +132,20 @@ BMP2_INTF_RET_TYPE bmp2_read(uint8_t reg_addr,
                              void* intf_ptr)
 {
   if (write(*(int*)intf_ptr, &reg_addr, 1) != 1) {
-    if (cli_opts.veryverbose) {
+    if (cli_opts.very_verbose) {
       perror("Could not write register to device for read");
     }
     return !BMP2_INTF_RET_SUCCESS;
   }
 
   if (read(*(int*)intf_ptr, reg_data, length) != (ssize_t)length) {
-    if (cli_opts.veryverbose) {
+    if (cli_opts.very_verbose) {
       perror("Could not read from device");
     }
     return !BMP2_INTF_RET_SUCCESS;
   }
 
-  if (cli_opts.veryverbose) {
+  if (cli_opts.very_verbose) {
     iolog("  Data read starting at register %02X:\n  ", reg_addr);
     for (uint32_t i = 0; i < length; i++) {
       iolog("%02X ", reg_data[i]);
@@ -173,13 +173,13 @@ BMP2_INTF_RET_TYPE bmp2_write(uint8_t reg_addr,
   }
 
   if (write(*(int*)intf_ptr, buffer, length + 1) != (ssize_t)length + 1) {
-    if (cli_opts.veryverbose) {
+    if (cli_opts.very_verbose) {
       perror("Could not write data to device");
     }
     return !BMP2_INTF_RET_SUCCESS;
   }
 
-  if (cli_opts.veryverbose) {
+  if (cli_opts.very_verbose) {
     iolog("  Data written:\n  %02X ", reg_addr);
     for (uint32_t i = 0; i < length; i++) {
       iolog("%02X ", reg_data[i]);
@@ -219,7 +219,7 @@ char* get_bmp2_error(int8_t code)
 
 void iolog(char* fmt, ...)
 {
-  if (!cli_opts.veryverbose)
+  if (!cli_opts.very_verbose)
     return;
 
   va_list args;

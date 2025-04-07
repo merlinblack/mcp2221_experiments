@@ -7,7 +7,7 @@ struct command_line_options {
   bool initialised;
   int bus;
   bool verbose;
-  bool veryverbose;
+  bool very_verbose;
   bool csv;
 };
 

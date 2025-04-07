@@ -1,6 +1,5 @@
 ags10_simple
 bmp280
-dump
 eeprom_read
 eeprom_write
 i2c_scan
@@ -8,7 +7,11 @@ mcp9808
 pcf8574
 ssd1306
 
+dump
+compile_commands.json
+
 .vscode
+.cache
 __pycache__
 
 *.o
