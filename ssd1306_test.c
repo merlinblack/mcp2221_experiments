@@ -86,7 +86,7 @@ int main(int argc, char** argv)
         ssd1306_writechar(30, 16, c + 1, 5);
         ssd1306_writechar(60, 16, c + 2, 5);
         ssd1306_writechar(90, 16, c + 3, 5);
-        ssd1306_show(i2c);
+        ssd1306_show();
         usleep(2000);
       }
       ssd1306_clear();
@@ -113,7 +113,7 @@ int main(int argc, char** argv)
     }
   }
 
-  if (ssd1306_show(i2c)) {
+  if (ssd1306_show()) {
     perror("ssd1306_show()");
   }
 

@@ -21,7 +21,7 @@ bool write_eeprom_chunk(int i2c, uint16_t address, uint8_t* data, size_t size)
   // the vaccant positions with bits equal to zero.
   // However the compiler (I'm using gcc) generates slightly smaller code
   // when you have it, taking advantage of the register 'al'
-  // being the high byte of 'ax', and not doing a shift at all.
+  // being the low byte of 'ax', and not doing a shift at all.
   buffer[0] = (address >> 8) & 0xff;
   buffer[1] = address & 0xff;
 
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
   close(fd);
   data[++size] = 0;
 
-  if (write_eeprom(i2c, /* address */ 6, data, size)) {
+  if (write_eeprom(i2c, 6, data, size)) {
     perror("Error writing to eeprom.");
     goto cleanup;
   }
