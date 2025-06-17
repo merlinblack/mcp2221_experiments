@@ -51,7 +51,9 @@ int main(int argc, char** argv)
     }
   }
 
-  printf("BMP280 found on address 0x%X\n", address);
+  if (cli_opts.json != true) {
+    printf("BMP280 found on address 0x%X\n", address);
+  }
 
   struct bmp2_config config;
 
@@ -95,8 +97,10 @@ int main(int argc, char** argv)
 
     if (status.measuring == BMP2_MEAS_ONGOING ||
         status.im_update == BMP2_IM_UPDATE_ONGOING) {
-      printf("Measurement delay : %lu µs\n",
-             (long unsigned int)measurement_time);
+      if (cli_opts.json != true) {
+        printf("Measurement delay : %lu µs\n",
+               (long unsigned int)measurement_time);
+      }
       usleep(measurement_time);
       continue;
     }
@@ -117,8 +121,16 @@ int main(int argc, char** argv)
     goto cleanup;
   }
 
-  printf("Temperature: %.4lf deg C\nPressure: %.4lf hPa\n", data.temperature,
-         data.pressure / 100);
+  if (cli_opts.json == true) {
+    printf(
+        "{\"chip\": \"bmp280\", \"temperature\": %.4lf, \"pressure\": %.4lf "
+        "}\n",
+        data.temperature, data.pressure / 100.0);
+
+  } else {
+    printf("Temperature: %.4lf deg C\nPressure: %.4lf hPa\n", data.temperature,
+           data.pressure / 100.0);
+  }
 
 cleanup:
   close(i2c);

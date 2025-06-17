@@ -15,14 +15,14 @@ struct option long_opts[] = {
     {"bus", required_argument, 0, 'b'},
     {"help", no_argument, 0, 'h'},
     {"verbose", no_argument, 0, 'v'},
-    {"csv", no_argument, 0, 'c'},
+    {"json", no_argument, 0, 'j'},
 };
 
 void get_options(int argc, char** argv)
 {
   int long_index;
   while (true) {
-    int opt = getopt_long(argc, argv, "b:hvc", long_opts, &long_index);
+    int opt = getopt_long(argc, argv, "b:hvj", long_opts, &long_index);
     if (opt == -1) {
       break;
     }
@@ -32,15 +32,14 @@ void get_options(int argc, char** argv)
         cli_opts.bus = atoi(optarg);
         break;
       case 'h':
-        fprintf(stderr, "Usage: %s [-b bus] [-h] [-v[v]] [-c]\n", argv[0]);
-        fprintf(
-            stderr,
-            "\t--bus\t\tThe i2c bus number to use. E.g. '1'\n"
-            "\t--verbose\tOutput more information. Repeat twice for even "
-            "more.\n"
-            "\t--csv\t\tOutput results in csv format. (Not implemented yet)\n"
-            "\t--help\t\tThis help text.\n"
-            "\n");
+        fprintf(stderr, "Usage: %s [-b bus] [-h] [-v[v]] [-j]\n", argv[0]);
+        fprintf(stderr,
+                "\t--bus\t\tThe i2c bus number to use. E.g. '1'\n"
+                "\t--verbose\tOutput more information. Repeat twice for even "
+                "more.\n"
+                "\t--json\t\tOutput results in json format.\n"
+                "\t--help\t\tThis help text.\n"
+                "\n");
         exit(0);
       case 'v':
         if (cli_opts.verbose == true) {
@@ -48,8 +47,8 @@ void get_options(int argc, char** argv)
         }
         cli_opts.verbose = true;
         break;
-      case 'c':
-        cli_opts.csv = true;
+      case 'j':
+        cli_opts.json = true;
         break;
       default:
         break;

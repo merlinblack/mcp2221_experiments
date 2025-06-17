@@ -39,7 +39,7 @@ int main(int argc, char** argv)
     // "Quick" write - i.e. just the address sent out
     if (write(i2c, data, 0) == 0) {
       // Found a device.
-      printf(" %02X", address);
+      printf(" %02x", address);
     } else {
       printf(" --");
     }

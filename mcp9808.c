@@ -4,6 +4,7 @@
 
 #include "getbus.h"
 #include "i2c.h"
+#include "options.h"
 
 int main(int argc, char** argv)
 {
@@ -61,7 +62,11 @@ int main(int argc, char** argv)
     temp -= 256;
   }
 
-  printf("Temperature: %f\n", temp);
+  if (cli_opts.json == true) {
+    printf("{\"chip\": \"mcp9808\", \"temperature\": %f }\n", temp);
+  } else {
+    printf("Temperature: %f\n", temp);
+  }
 
 cleanup:
   close(i2c);

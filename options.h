@@ -8,7 +8,7 @@ struct command_line_options {
   int bus;
   bool verbose;
   bool very_verbose;
-  bool csv;
+  bool json;
 };
 
 extern struct command_line_options cli_opts;

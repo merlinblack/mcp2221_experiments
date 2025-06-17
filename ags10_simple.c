@@ -4,6 +4,7 @@
 
 #include "getbus.h"
 #include "i2c.h"
+#include "options.h"
 
 #define AGS10_ADDRESS 0x1a;
 #define TVOC_REG 0x00;
@@ -41,9 +42,14 @@ int main(int argc, char** argv)
   uint32_t c = data[3];
   uint32_t reading = (a << 16) | (b << 8) | c;
 
-  printf("Status: %s\n", data[0] & 0x1 ? "Wait" : "Ready");
-  // printf("Bytes: 0x%02x 0x%02x 0x%02x\n", data[1], data[2], data[3]);
-  printf("TVOC Reading: %d ppb\n", reading);
+  if (cli_opts.json == true) {
+    printf("{\"chip\": \"ags10\", \"tvoc\": %d }\n", reading);
+
+  } else {
+    printf("Status: %s\n", data[0] & 0x1 ? "Wait" : "Ready");
+    // printf("Bytes: 0x%02x 0x%02x 0x%02x\n", data[1], data[2], data[3]);
+    printf("TVOC Reading: %d ppb\n", reading);
+  }
 
 cleanup:
   close(i2c);
