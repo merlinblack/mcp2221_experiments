@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     }
   }
 
-  if (cli_opts.json != true) {
+  if (cli_opts.verbose == true) {
     printf("BMP280 found on address 0x%X\n", address);
   }
 
@@ -97,7 +97,7 @@ int main(int argc, char** argv)
 
     if (status.measuring == BMP2_MEAS_ONGOING ||
         status.im_update == BMP2_IM_UPDATE_ONGOING) {
-      if (cli_opts.json != true) {
+      if (cli_opts.verbose == true) {
         printf("Measurement delay : %lu µs\n",
                (long unsigned int)measurement_time);
       }

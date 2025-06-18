@@ -6,17 +6,16 @@
 #include "i2c.h"
 #include "options.h"
 
-#define AGS10_ADDRESS 0x1a;
-#define TVOC_REG 0x00;
-#define VERSION_REG 0x11;
-#define RESISTANCE_REG 0x20;
+#define AGS10_ADDRESS 0x1a
+#define TVOC_REG 0x00
+#define VERSION_REG 0x11
+#define RESISTANCE_REG 0x20
 
 int main(int argc, char** argv)
 {
   int bus = get_bus(argc, argv);
-  int address = 0x1a;
 
-  int i2c = i2c_open(bus, address);
+  int i2c = i2c_open(bus, AGS10_ADDRESS);
 
   if (i2c < 0) {
     return 0;
@@ -37,17 +36,15 @@ int main(int argc, char** argv)
     goto cleanup;
   }
 
-  uint32_t a = data[1];
-  uint32_t b = data[2];
-  uint32_t c = data[3];
-  uint32_t reading = (a << 16) | (b << 8) | c;
+  uint32_t reading = (data[1] << 16) | (data[2] << 8) | data[3];
 
   if (cli_opts.json == true) {
     printf("{\"chip\": \"ags10\", \"tvoc\": %d }\n", reading);
 
   } else {
-    printf("Status: %s\n", data[0] & 0x1 ? "Wait" : "Ready");
-    // printf("Bytes: 0x%02x 0x%02x 0x%02x\n", data[1], data[2], data[3]);
+    if (cli_opts.verbose == true) {
+      printf("Status: %s\n", data[0] & 0x1 ? "Wait" : "Ready");
+    }
     printf("TVOC Reading: %d ppb\n", reading);
   }
 
