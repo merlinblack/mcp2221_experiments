@@ -8,13 +8,13 @@
 
 #include "options.h"
 
-#define DEFAULT_BUS 10
+#define DEFAULT_BUS 1
 
 int get_from_sysfs(bool verbose);
 
 int get_bus(int argc, char** argv)
 {
-  int bus;
+  int bus = -1;
 
   if (!cli_opts.initialised) {
     get_options(argc, argv);

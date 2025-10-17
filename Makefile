@@ -16,32 +16,35 @@ tags:	*.c *.h
 
 .PHONY:
 clean:
-	rm -f $(EXEC) $(LIB) bmp2.o tags
+	rm -f $(EXEC) *.o tags
 
-i2c_scan: i2c_scan.c $(LIB)
+i2c_scan: i2c_scan.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
-pcf8574: pcf8574.c $(LIB)
+pcf8574: pcf8574.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
-mcp9808: mcp9808.c $(LIB)
+mcp9808: mcp9808.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
-ags10_simple: ags10_simple.c $(LIB)
+ags10_simple: ags10_simple.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
 bmp2.o: bmp2-sensor-api/bmp2.c bmp2-sensor-api/bmp2.h bmp2-sensor-api/bmp2_defs.h
 	$(CC) $(CFLAGS) -c -I bmp2-sensor-api bmp2-sensor-api/bmp2.c
 
-bmp280: bmp280.c bmp2.o $(LIB)
-	$(CC) $(CFLAGS) -I bmp2-sensor-api -o $@ $^
+bmp280.o: bmp280.c
+	$(CC) $(CFLAGS) -c -I bmp2-sensor-api -o $@ $^
 
-ssd1306: ssd1306_test.c ssd1306.c $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^ -lm
-
-eeprom_read: eeprom_read.c $(LIB)
+bmp280: bmp280.o bmp2.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
-eeprom_write: eeprom_write.c $(LIB)
+ssd1306: ssd1306_test.o ssd1306.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^ -lm
+
+eeprom_read: eeprom_read.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^
+
+eeprom_write: eeprom_write.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
