@@ -78,8 +78,8 @@ bool ssd1306_init()
       SET_DISP_OFFSET, 0x00, SET_COM_PIN_CFG, com_pin_cfg,
       // timing and driving scheme
       SET_DISP_CLK_DIV, 0x80, SET_PRECHARGE, 0xf1,  // no external vcc
-      SET_VCOM_DESEL, 0x30,  // 0.83*Vcc - n.b. specs for ssd1306 for 64x32
-                             // screens imply this should be 0x40 display
+      SET_VCOM_DESEL, 0x30,   // 0.83*Vcc - n.b. specs for ssd1306 for 64x32
+                              // screens imply this should be 0x40 display
       SET_CONTRAST, 0xff,     // maximum!
       SET_ENTIRE_ON,          // output is entire RAM contents
       SET_NORM_INV,           // not inverted
