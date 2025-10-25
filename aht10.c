@@ -46,7 +46,7 @@ int main(int argc, char** argv)
   // printf( "data: %x %x %x %x %x %x\n", data[0], data[1], data[2], data[3],
   // data[4], data[5] );
 
-  uint32_t raw_humidity = data[1] << 12 | data[2] << 4 | data[3] << 4;
+  uint32_t raw_humidity = data[1] << 12 | data[2] << 4 | data[3] >> 4;
   uint32_t raw_temperature = (data[3] & 0x0F) << 16 | data[4] << 8 | data[5];
 
   // 20 bits ^ 2 = 1048576
