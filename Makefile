@@ -1,7 +1,8 @@
-EXEC=i2c_scan pcf8574 mcp9808 ags10_simple bmp280 ssd1306 eeprom_read eeprom_write
+EXEC=i2c_scan aht10 pcf8574 mcp9808 ags10_simple bmp280 ssd1306 eeprom_read eeprom_write
 LIB=i2c.o options.o getbus.o
 CC=gcc
 CFLAGS=-O3 -Wall -Wextra -Wpedantic -g
+INSTALLDIR=$(HOME)/.local/bin
 
 .PHONY:
 all: $(EXEC) tags
@@ -17,6 +18,9 @@ tags:	*.c *.h
 .PHONY:
 clean:
 	rm -f $(EXEC) *.o tags
+
+aht10: aht10.c $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^
 
 i2c_scan: i2c_scan.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
@@ -48,3 +52,8 @@ eeprom_read: eeprom_read.o $(LIB)
 eeprom_write: eeprom_write.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
+install:
+	install mcp9808 $(INSTALLDIR)
+	install bmp280 $(INSTALLDIR)
+	install ags10_simple $(INSTALLDIR)
+	install aht10 $(INSTALLDIR)
