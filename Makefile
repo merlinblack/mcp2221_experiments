@@ -1,4 +1,4 @@
-EXEC=i2c_scan aht10 pcf8574 mcp9808 ags10_simple bmp280 ssd1306 eeprom_read eeprom_write
+EXEC=i2c_scan aht10 bh1750 pcf8574 mcp9808 ags10_simple bmp280 ssd1306 eeprom_read eeprom_write
 LIB=i2c.o options.o getbus.o
 CC=gcc
 CFLAGS=-O3 -Wall -Wextra -Wpedantic -g
@@ -20,6 +20,9 @@ clean:
 	rm -f $(EXEC) *.o tags
 
 aht10: aht10.c $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^
+
+bh1750: bh1750.c $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
 i2c_scan: i2c_scan.o $(LIB)
