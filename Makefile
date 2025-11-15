@@ -5,7 +5,7 @@ CFLAGS=-O3 -Wall -Wextra -Wpedantic -g
 INSTALLDIR=$(HOME)/.local/bin
 
 .PHONY:
-all: $(EXEC) tags
+all: $(EXEC) ctags
 
 .ONESHELL:
 tags:	*.c *.h
@@ -17,7 +17,7 @@ tags:	*.c *.h
 
 .PHONY:
 clean:
-	rm -f $(EXEC) *.o tags
+	rm -f $(EXEC) $(LIB) bmp2.o ctags
 
 aht10: aht10.c $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^

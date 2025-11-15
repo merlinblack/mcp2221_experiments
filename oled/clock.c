@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -22,7 +23,7 @@ char* ordinal_suffix_of(int i)
   return "th";
 }
 
-void main(int argc, char** argv)
+int main(int argc, char** argv)
 {
   time_t rawtime;
   struct tm* timeinfo;
@@ -36,7 +37,7 @@ void main(int argc, char** argv)
 
   i2c = i2c_open(opt->bus, opt->address);
   if (i2c < 0) {
-    return;
+    return EXIT_FAILURE;
   }
 
   ssd1306_begin(i2c);

@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -11,14 +11,14 @@
 
 #define LINES 7
 
-void main(int argc, char** argv)
+int main(int argc, char** argv)
 {
   Options* opt = getOptions(argc, argv);
 
   int i2c = i2c_open(opt->bus, opt->address);
 
   if (i2c < 0) {
-    return;
+    return EXIT_FAILURE;
   }
 
   ssd1306_begin(i2c);
@@ -28,13 +28,13 @@ void main(int argc, char** argv)
       ssd1306_clear();
       ssd1306_full_blit(love);
       ssd1306_show();
-      return;
+      return EXIT_SUCCESS;
     }
     if (!strcmp(argv[optind], "red5")) {
       ssd1306_clear();
       ssd1306_full_blit(red5);
       ssd1306_show();
-      return;
+      return EXIT_SUCCESS;
     }
   }
 
@@ -67,4 +67,6 @@ void main(int argc, char** argv)
   }
 
   ssd1306_show();
+
+  return EXIT_SUCCESS;
 }
