@@ -55,8 +55,9 @@ eeprom_read: eeprom_read.o $(LIB)
 eeprom_write: eeprom_write.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
-install:
+install: mcp9808 bmp280 ags10_simple aht10 bh1750
 	install mcp9808 $(INSTALLDIR)
 	install bmp280 $(INSTALLDIR)
 	install ags10_simple $(INSTALLDIR)
 	install aht10 $(INSTALLDIR)
+	install bh1750 $(INSTALLDIR)

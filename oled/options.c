@@ -9,7 +9,7 @@ Options* getOptions(int argc, char** argv)
 {
   static Options options;
   // Defaults
-  options.bus = 0;
+  options.bus = 1;
   options.address = SSD1306_I2C_ADDRESS;
   options.lineSpacing = 0;
   options.textSize = 1;

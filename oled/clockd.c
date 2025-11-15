@@ -74,15 +74,19 @@ int main(int argc, char** argv)
     time(&rawtime);
     timeinfo = localtime(&rawtime);
 
-    if (timeinfo->tm_hour > 1 && timeinfo->tm_hour < 7) {
+    if (timeinfo->tm_hour > 1 && timeinfo->tm_hour < 6) {
       // Nightnight.
       ssd1306_clear();
       ssd1306_show();
-      while (timeinfo->tm_hour < 7) {
+
+      while (timeinfo->tm_hour < 7 && access(inhibit, F_OK) == -1) {
         sleep(60);
         time(&rawtime);
         timeinfo = localtime(&rawtime);
       }
+
+      // Incase we have exited the loop above due to the inhibit file
+      continue;
     }
 
     ssd1306_clear();

@@ -1,9 +1,11 @@
-CFLAGS=-std=gnu99 -g
-#CFLAGS=-std=gnu99
+#CFLAGS=-std=gnu99 -g
+CFLAGS=-std=gnu99
 
 COMMON=options.c ssd1306.c i2c.c
 COMMON_OBJ=$(COMMON:.c=.o)
 LIBS=
+
+INSTALLDIR=$(HOME)/.local/bin
 
 .PHONY: all
 all: oled oledinit oledinvert oleddim clock clockd
@@ -36,4 +38,9 @@ clean:
 
 .PHONY: install
 install: all
-	cp -v oled clock clockd oledinit oledinvert oleddim ~/bin
+	install oled $(INSTALLDIR)
+	install clock $(INSTALLDIR)
+	install clockd $(INSTALLDIR)
+	install oledinit $(INSTALLDIR)
+	install oledinvert $(INSTALLDIR)
+	install oleddim $(INSTALLDIR)
