@@ -5,19 +5,11 @@ CFLAGS=-O3 -Wall -Wextra -Wpedantic -g
 INSTALLDIR=$(HOME)/.local/bin
 
 .PHONY:
-all: $(EXEC) ctags
-
-.ONESHELL:
-ctags:	*.c *.h
-	@if command -V ctags &> /dev/null; then
-		ctags *.c *.h
-	else
-		touch ctags
-	fi
+all: $(EXEC)
 
 .PHONY:
 clean:
-	rm -f $(EXEC) *.o ctags
+	rm -f $(EXEC) *.o
 
 aht10: aht10.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
@@ -31,7 +23,7 @@ i2c_scan: i2c_scan.o $(LIB)
 pcf8574: pcf8574.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
-mcp9808: mcp9808.o $(LIB)
+mcp9808: mcp9808.o mcp9808_cli.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
 ags10: ags10.o ags10_cli.o $(LIB)

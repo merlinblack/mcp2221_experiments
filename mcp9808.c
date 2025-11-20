@@ -1,22 +1,10 @@
 #include <stdint.h>
-#include <stdio.h>
 #include <unistd.h>
 
-#include "getbus.h"
-#include "i2c.h"
-#include "options.h"
+#include "sensors.h"
 
-int main(int argc, char** argv)
+int get_measurement_mcp9808(int i2c, float* temperature)
 {
-  int bus = get_bus(argc, argv);
-  int address = 0x18;  // MCP9808 address
-
-  int i2c = i2c_open(bus, address);
-
-  if (i2c < 0) {
-    return 0;
-  }
-
   uint8_t data[3];
 
   // Cofiguration register 0x01
@@ -28,8 +16,7 @@ int main(int argc, char** argv)
   // Check the result of the first write to make sure
   // device is there.
   if (write(i2c, data, 3) != 3) {
-    perror("Error writing to device");
-    goto cleanup;
+    return MEASUREMENT_FAILURE;
   }
 
   // Resolution register 0x08
@@ -46,7 +33,7 @@ int main(int argc, char** argv)
 
   // Read could fail
   if (read(i2c, data, 2) != 2) {
-    goto cleanup;
+    return MEASUREMENT_FAILURE;
   }
 
   // Convert data
@@ -62,14 +49,7 @@ int main(int argc, char** argv)
     temp -= 256;
   }
 
-  if (cli_opts.json == true) {
-    printf("{\"chip\": \"mcp9808\", \"temperature\": %f }\n", temp);
-  } else {
-    printf("Temperature: %f\n", temp);
-  }
+  *temperature = temp;
 
-cleanup:
-  close(i2c);
-
-  return 0;
+  return MEASUREMENT_SUCCESS;
 }

@@ -19,4 +19,8 @@ int get_measurement_bh1750(int i2c, float* lux);
 
 int get_measurement_ags10(int i2c, bool* ready, uint32_t* tvoc);
 
+#define MCP9808_ADDRESS 0x18
+
+int get_measurement_mcp9808(int i2c, float* temperature);
+
 #endif  // SENSOR_H
