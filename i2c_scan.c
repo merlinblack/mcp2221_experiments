@@ -1,6 +1,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #include "getbus.h"
@@ -13,7 +14,7 @@ int main(int argc, char** argv)
   int i2c = i2c_open(bus, -1);
 
   if (i2c < 0) {
-    return 0;
+    return EXIT_FAILURE;
   }
 
   printf("Write test i2c scan...\n");
@@ -26,7 +27,8 @@ int main(int argc, char** argv)
     if (i2c_select(i2c, address) == -1) {
       if (errno == EBUSY) {
         printf(" UU");
-      } else {
+      }
+      else {
         perror("Well this never happens? ");
         break;
       }
@@ -40,7 +42,8 @@ int main(int argc, char** argv)
     if (write(i2c, data, 0) == 0) {
       // Found a device.
       printf(" %02x", address);
-    } else {
+    }
+    else {
       printf(" --");
     }
   }
@@ -49,5 +52,5 @@ int main(int argc, char** argv)
 
   close(i2c);
 
-  return 0;
+  return EXIT_SUCCESS;
 }

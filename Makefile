@@ -1,4 +1,4 @@
-EXEC=i2c_scan aht10 bh1750 pcf8574 mcp9808 ags10_simple bmp280 ssd1306 eeprom_read eeprom_write
+EXEC=i2c_scan aht10 bh1750 pcf8574 mcp9808 ags10 bmp280 ssd1306 eeprom_read eeprom_write
 LIB=i2c.o options.o getbus.o
 CC=gcc
 CFLAGS=-O3 -Wall -Wextra -Wpedantic -g
@@ -8,7 +8,7 @@ INSTALLDIR=$(HOME)/.local/bin
 all: $(EXEC) ctags
 
 .ONESHELL:
-tags:	*.c *.h
+ctags:	*.c *.h
 	@if command -V ctags &> /dev/null; then
 		ctags *.c *.h
 	else
@@ -17,12 +17,12 @@ tags:	*.c *.h
 
 .PHONY:
 clean:
-	rm -f $(EXEC) $(LIB) bmp2.o ctags
+	rm -f $(EXEC) *.o ctags
 
-aht10: aht10.c $(LIB)
+aht10: aht10.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
-bh1750: bh1750.c $(LIB)
+bh1750: bh1750.o bh1750_cli.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
 i2c_scan: i2c_scan.o $(LIB)
@@ -34,7 +34,7 @@ pcf8574: pcf8574.o $(LIB)
 mcp9808: mcp9808.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
-ags10_simple: ags10_simple.o $(LIB)
+ags10: ags10.o ags10_cli.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
 bmp2.o: bmp2-sensor-api/bmp2.c bmp2-sensor-api/bmp2.h bmp2-sensor-api/bmp2_defs.h
@@ -55,9 +55,9 @@ eeprom_read: eeprom_read.o $(LIB)
 eeprom_write: eeprom_write.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
-install: mcp9808 bmp280 ags10_simple aht10 bh1750
+install: mcp9808 bmp280 ags10 aht10 bh1750
 	install mcp9808 $(INSTALLDIR)
 	install bmp280 $(INSTALLDIR)
-	install ags10_simple $(INSTALLDIR)
+	install ags10 $(INSTALLDIR)
 	install aht10 $(INSTALLDIR)
 	install bh1750 $(INSTALLDIR)
