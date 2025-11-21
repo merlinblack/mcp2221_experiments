@@ -3,9 +3,10 @@
 #include <unistd.h>
 
 #include "bmp2.h"
-#include "getbus.h"
+#include "bmp2_defs.h"
 #include "i2c.h"
 #include "options.h"
+#include "sensors.h"
 
 BMP2_INTF_RET_TYPE bmp2_read(uint8_t reg_addr,
                              uint8_t* reg_data,
@@ -21,17 +22,9 @@ char* get_bmp2_error(int8_t code);
 void iolog(char* fmt, ...);
 void elog(char* fmt, ...);
 
-int main(int argc, char** argv)
+int get_measurement_bmp280(int i2c, float* temperature, float* pressure)
 {
-  int bus = get_bus(argc, argv);
   int address = BMP2_I2C_ADDR_PRIM;
-
-  int i2c = i2c_open(bus, address);
-
-  if (i2c < 0) {
-    return -1;
-  }
-
   int8_t ret;
 
   struct bmp2_dev device;
@@ -41,13 +34,15 @@ int main(int argc, char** argv)
   device.write = bmp2_write;
   device.delay_us = bmp2_delay_us;
 
+  i2c_select(i2c, address);
+
   iolog("bmp2_init()\n");
   if (BMP2_OK != (ret = bmp2_init(&device))) {
     address = BMP2_I2C_ADDR_SEC;
     i2c_select(i2c, address);
     if (BMP2_OK != (ret = bmp2_init(&device))) {
       elog("Whoops! %s\n", get_bmp2_error(ret));
-      goto cleanup;
+      return MEASUREMENT_FAILURE;
     }
   }
 
@@ -60,7 +55,7 @@ int main(int argc, char** argv)
   iolog("bmp2_get_config()\n");
   if (BMP2_OK != (ret = bmp2_get_config(&config, &device))) {
     elog("Whoops! %s\n", get_bmp2_error(ret));
-    goto cleanup;
+    return MEASUREMENT_FAILURE;
   }
 
   config.os_mode = BMP2_OS_MODE_HIGH_RESOLUTION;
@@ -71,7 +66,7 @@ int main(int argc, char** argv)
   if (BMP2_OK !=
       (ret = bmp2_set_power_mode(BMP2_POWERMODE_FORCED, &config, &device))) {
     elog("Whoops! %s\n", get_bmp2_error(ret));
-    goto cleanup;
+    return MEASUREMENT_FAILURE;
   }
 
   uint32_t measurement_time;
@@ -80,7 +75,7 @@ int main(int argc, char** argv)
   if (BMP2_OK !=
       (ret = bmp2_compute_meas_time(&measurement_time, &config, &device))) {
     elog("Whoops! %s\n", get_bmp2_error(ret));
-    goto cleanup;
+    return MEASUREMENT_FAILURE;
   }
 
   int tries = 10;
@@ -92,7 +87,7 @@ int main(int argc, char** argv)
     iolog("bmp2_get_status()\n");
     if (BMP2_OK != (ret = bmp2_get_status(&status, &device))) {
       elog("Whoops! %s\n", get_bmp2_error(ret));
-      goto cleanup;
+      return MEASUREMENT_FAILURE;
     }
 
     if (status.measuring == BMP2_MEAS_ONGOING ||
@@ -108,7 +103,7 @@ int main(int argc, char** argv)
     iolog("bmp2_get_sensor_data()\n");
     if (BMP2_OK != (ret = bmp2_get_sensor_data(&data, &device))) {
       elog("Whoops! %s\n", get_bmp2_error(ret));
-      goto cleanup;
+      return MEASUREMENT_FAILURE;
     }
 
     break;
@@ -118,24 +113,13 @@ int main(int argc, char** argv)
   if (BMP2_OK !=
       (ret = bmp2_set_power_mode(BMP2_POWERMODE_SLEEP, &config, &device))) {
     elog("Whoops! %s\n", get_bmp2_error(ret));
-    goto cleanup;
+    return MEASUREMENT_FAILURE;
   }
 
-  if (cli_opts.json == true) {
-    printf(
-        "{\"chip\": \"bmp280\", \"temperature\": %.4lf, \"pressure\": %.4lf "
-        "}\n",
-        data.temperature, data.pressure / 100.0);
+  *temperature = data.temperature;
+  *pressure = data.pressure;
 
-  } else {
-    printf("Temperature: %.4lf deg C\nPressure: %.4lf hPa\n", data.temperature,
-           data.pressure / 100.0);
-  }
-
-cleanup:
-  close(i2c);
-
-  return 0;
+  return MEASUREMENT_SUCCESS;
 }
 
 BMP2_INTF_RET_TYPE bmp2_read(uint8_t reg_addr,

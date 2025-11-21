@@ -31,4 +31,6 @@ int get_measurement_mcp9808(int i2c, float* temperature);
 
 int get_measurement_aht10(int i2c, float* temperature, float* humidity);
 
+int get_measurement_bmp280(int i2c, float* temperature, float* pressure);
+
 #endif  // SENSOR_H
