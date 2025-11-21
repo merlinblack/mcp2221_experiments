@@ -23,4 +23,12 @@ int get_measurement_ags10(int i2c, bool* ready, uint32_t* tvoc);
 
 int get_measurement_mcp9808(int i2c, float* temperature);
 
+#define AHT10_ADDRESS 0x38
+#define AHT10_INIT_CMD 0xE1
+#define AHT10_START_MEASUREMENT_CMD 0xAC
+#define AHT10_CALIBRATION_ENABLE 0x08
+#define AHT10_NOP 0x00
+
+int get_measurement_aht10(int i2c, float* temperature, float* humidity);
+
 #endif  // SENSOR_H

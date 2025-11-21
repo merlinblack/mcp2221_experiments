@@ -11,7 +11,7 @@ all: $(EXEC)
 clean:
 	rm -f $(EXEC) *.o
 
-aht10: aht10.o $(LIB)
+aht10: aht10.o aht10_cli.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
 bh1750: bh1750.o bh1750_cli.o $(LIB)
