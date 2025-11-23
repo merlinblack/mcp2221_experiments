@@ -1,7 +1,6 @@
 #ifndef __SSD1306_H
 #define __SSD1306_H
 
-#include <stdbool.h>
 #include <stdint.h>
 
 #define SSD1306_WIDTH 128

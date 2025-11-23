@@ -1,7 +1,6 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include <stdbool.h>
 #include <stdint.h>
 
 #define MEASUREMENT_FAILURE -1

@@ -1,5 +1,5 @@
-#CFLAGS=-std=gnu99 -g
-CFLAGS=-std=gnu99
+#CFLAGS=-std=gnu23 -g
+CFLAGS=-std=gnu23 -O3
 
 COMMON=options.c ssd1306.c i2c.c
 COMMON_OBJ=$(COMMON:.c=.o)
