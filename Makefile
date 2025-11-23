@@ -1,7 +1,7 @@
 EXEC=i2c_scan aht10 bh1750 pcf8574 mcp9808 ags10 bmp280 ssd1306 eeprom_read eeprom_write
 LIB=i2c.o options.o getbus.o
 CC=gcc
-CFLAGS-std=gnu23 =-O3 -Wall -Wextra -Wpedantic -g
+CFLAGS=-std=gnu23 -O3 -Wall -Wextra -Wpedantic -g
 INSTALLDIR=$(HOME)/.local/bin
 
 .PHONY:
