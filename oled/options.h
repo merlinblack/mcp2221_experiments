@@ -6,6 +6,8 @@ struct Options {
   unsigned int address;
   unsigned int lineSpacing;
   unsigned int textSize;
+  unsigned int skip;
+  char caption[23];
 };
 typedef struct Options Options;
 

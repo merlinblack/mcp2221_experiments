@@ -15,8 +15,13 @@ while true; do
   PRESSURE=$(echo $BMP | jq .pressure)
   LUX=$(echo $BH | jq .lux)
 
-  oled -t2 $TEMPERATURE $HUMIDITY $PRESSURE $LUX
-
-  sleep 2
+  oled -t3 -c Temperature -k32 $TEMPERATURE
+  sleep 5
+  oled -t3 -c Humidity -k32 $HUMIDITY
+  sleep 5
+  oled -t3 -c Pressure -k32 $PRESSURE
+  sleep 5
+  oled -t3 -c Lux -k32 $LUX
+  sleep 5
 
 done

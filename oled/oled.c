@@ -40,8 +40,14 @@ int main(int argc, char** argv)
 
   ssd1306_clear();
 
-  char buffer[22];
-  uint8_t y = 0;
+  char buffer[23];
+  if (opt->caption[0] != 0) {
+    ssd1306_write_xy(0, 0, opt->caption, 1);
+    if (opt->skip == 0) {
+      opt->skip = 16;
+    }
+  }
+  uint8_t y = opt->skip;
   for (int i = optind; i <= LINES && i < argc; i++) {
     char* index = argv[i];
     int c;
@@ -55,7 +61,8 @@ int main(int argc, char** argv)
           buffer[c] = '\\';
         }
         index++;
-      } else {
+      }
+      else {
         buffer[c] = *index;
       }
       index++;
