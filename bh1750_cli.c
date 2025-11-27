@@ -26,10 +26,10 @@ int main(int argc, char** argv)
     ret = EXIT_FAILURE;
   }
   else if (cli_opts.json == true) {
-    printf("{\"chip\": \"bh1750\", \"lux\": %f }\n", lux);
+    printf("{\"chip\": \"bh1750\", \"lux\": %0.2f }\n", lux);
   }
   else {
-    printf("Lux: %f\n", lux);
+    printf("Lux: %0.2f\n", lux);
   }
 
   close(i2c);

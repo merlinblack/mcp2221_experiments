@@ -25,11 +25,12 @@ int main(int argc, char** argv)
     perror("Could not read sensor AHT10");
   }
   else if (cli_opts.json == true) {
-    printf("{\"chip\": \"aht10\", \"temperature\": %f, \"humidity\": %f }\n",
-           temperature, humidity);
+    printf(
+        "{\"chip\": \"aht10\", \"temperature\": %0.2f, \"humidity\": %0.2f }\n",
+        temperature, humidity);
   }
   else {
-    printf("Temperature: %f\nHumidity: %f", temperature, humidity);
+    printf("Temperature: %0.2f\nHumidity: %0.2f\n", temperature, humidity);
   }
 
   close(i2c);
