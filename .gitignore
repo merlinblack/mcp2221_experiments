@@ -8,6 +8,9 @@ i2c_scan
 mcp9808
 pcf8574
 ssd1306
+measurementlogger
+
+measurements.db
 
 dump
 compile_commands.json

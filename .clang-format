@@ -1,5 +1,6 @@
 ﻿---
 BasedOnStyle: Chromium
+ColumnLimit: 0
 UseTab: Never
 #BreakBeforeBraces: Linux
 BreakBeforeBraces: Custom

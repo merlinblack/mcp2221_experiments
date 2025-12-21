@@ -1,4 +1,4 @@
-EXEC=i2c_scan aht10 bh1750 pcf8574 mcp9808 ags10 bmp280 ssd1306 eeprom_read eeprom_write
+EXEC=i2c_scan aht10 bh1750 pcf8574 mcp9808 ags10 bmp280 ssd1306 eeprom_read eeprom_write measurementlogger
 LIB=i2c.o options.o getbus.o
 CC=gcc
 CFLAGS=-std=gnu23 -O3 -Wall -Wextra -Wpedantic -g
@@ -46,6 +46,9 @@ eeprom_read: eeprom_read.o $(LIB)
 
 eeprom_write: eeprom_write.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
+
+measurementlogger: logger.o $(LIB) bmp280.o bmp2.o aht10.o ags10.o
+	$(CC) $(CFLAGS) -o $@ $^ -lsqlite3 
 
 install: mcp9808 bmp280 ags10 aht10 bh1750
 	install mcp9808 $(INSTALLDIR)
