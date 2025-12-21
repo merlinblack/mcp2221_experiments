@@ -21,7 +21,7 @@ void get_logger_options(int argc, char* argv[], cmdline_options* options)
 {
   // defaults
   options->bus = 1;
-  options->verbose = true;
+  options->verbose = false;
   options->db_filename[0] = 0;
   strncat(options->db_filename, "measurements.db", PATH_MAX - 1);
 
