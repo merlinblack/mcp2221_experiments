@@ -26,7 +26,7 @@ void get_logger_options(int argc, char* argv[], cmdline_options* options)
   strncat(options->db_filename, "measurements.db", PATH_MAX - 1);
 
   while (true) {
-    int opt = getopt(argc, argv, "b:f:v");
+    int opt = getopt(argc, argv, "b:f:vh");
 
     if (opt == -1) {
       return;
@@ -43,6 +43,15 @@ void get_logger_options(int argc, char* argv[], cmdline_options* options)
       case 'v':
         options->verbose = true;
         break;
+      case 'h':
+        printf(
+            "Usage: %s [-v][-b nn][-f filename]\n"
+            "\n"
+            "-v\t\tVerbose\n"
+            "-b nn\t\tUse nn for i2c bus number. Defaut is '1'\n"
+            "-f filename\tUse filename for sqlite database. Default is 'measurements.db'\n\n",
+            argv[0]);
+        exit(EXIT_SUCCESS);
     }
   }
 }
