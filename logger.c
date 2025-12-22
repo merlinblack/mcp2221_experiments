@@ -140,7 +140,7 @@ int write_measurements(sqlite3* db,
   if (ret) {
     return ret;
   }
-  ret = sqlite3_bind_text(stmt, 6, "Alisons place, Kingwood", -1, SQLITE_STATIC);
+  ret = sqlite3_bind_text(stmt, 6, "Alisons place, Kingswood", -1, SQLITE_STATIC);
   if (ret) {
     return ret;
   }
