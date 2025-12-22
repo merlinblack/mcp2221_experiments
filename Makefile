@@ -1,15 +1,23 @@
-EXEC=i2c_scan aht10 bh1750 pcf8574 mcp9808 ags10 bmp280 ssd1306 eeprom_read eeprom_write measurementlogger
+EXEC=i2c_scan aht10 bh1750 pcf8574 mcp9808 ags10 bmp280 ssd1306 eeprom_read eeprom_write
 LIB=i2c.o options.o getbus.o
 CC=gcc
 CFLAGS=-std=gnu23 -O3 -Wall -Wextra -Wpedantic -g
 INSTALLDIR=$(HOME)/.local/bin
 
 .PHONY:
-all: $(EXEC)
+all: $(EXEC) measurementlogger
 
 .PHONY:
 clean:
-	rm -f $(EXEC) *.o
+	rm -f *.o
+
+.PHONY:
+vclean: clean
+	rm -f $(EXEC)
+
+.PHONY:
+vvclean: vclean
+	rm -f measurementlogger
 
 aht10: aht10.o aht10_cli.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
