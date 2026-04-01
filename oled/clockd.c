@@ -74,7 +74,7 @@ int main(int argc, char** argv)
     time(&rawtime);
     timeinfo = localtime(&rawtime);
 
-    if (timeinfo->tm_hour > 1 && timeinfo->tm_hour < 6) {
+    if (timeinfo->tm_hour > 1 && timeinfo->tm_hour < 5) {
       // Nightnight.
       ssd1306_clear();
       ssd1306_show();
@@ -99,7 +99,8 @@ int main(int argc, char** argv)
     if (dots) {
       strftime(buffer, 24, "%I:%M", timeinfo);
       dots = false;
-    } else {
+    }
+    else {
       strftime(buffer, 24, "%I %M", timeinfo);
       dots = true;
     }
